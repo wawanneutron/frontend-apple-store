@@ -21,7 +21,7 @@
                                     <div class="form-group">
                                         <label>Email address</label>
                                         <input type="email" v-model="user.email" class="form-control"
-                                            placeholder="Email Address">
+                                            placeholder="Email Address" >
                                     </div>
                                     <div v-if="validation.email" class="mt-2 alert alert-danger">
                                         {{ validation.email[0] }}
