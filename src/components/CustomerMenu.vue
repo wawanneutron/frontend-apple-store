@@ -9,9 +9,12 @@
           class="list-group-item text-decoration-none text-dark"
           ><i class="fas fa-tachometer-alt mr-3"></i>dashboard</router-link
         >
-        <a href="#" class="list-group-item text-decoration-none text-dark">
+        <router-link
+          :to="{ name: 'order' }"
+          class="list-group-item text-decoration-none text-dark"
+        >
           <i class="fas fa-shopping-cart mr-3"></i>My order
-        </a>
+        </router-link>
         <a
           style="cursor: pointer"
           class="list-group-item text-decoration-none text-dark"

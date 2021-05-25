@@ -17,8 +17,26 @@ const routes = [
   {
     path: "/customer/dashboard",
     name: "dashboard",
-    component: () => import("@/views/dashboard/index.vue"),
-    // check apakah sudah login ?
+    component: () => import("@/views/dashboard/Index.vue"),
+    // check is loggedIn
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/customer/order",
+    name: "order",
+    component: () => import("@/views/order/Index.vue"),
+    // check is loggedIn
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/customer/order/:snap_token",
+    name: "detail_order",
+    component: () => import("@/views/order/Show.vue"),
+    // check is loggedIn
     meta: {
       requiresAuth: true,
     },
