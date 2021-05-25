@@ -8,7 +8,7 @@
         <div class="card border-0 rounded shadow">
           <div class="card-body">
             <h5 class="font-weight-bold">
-              <i class="fas fa-shopping-cart"></i>My Order
+              <i class="fas fa-shopping-cart mr-2"></i>My Order
             </h5>
             <table
               class="table table-striped table-bordered mt-4 table-responsive-lg"
