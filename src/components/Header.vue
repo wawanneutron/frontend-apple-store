@@ -5,8 +5,7 @@
         <div class="row align-items-center">
           <div class="col-md-3 col-7">
             <router-link
-              :to="{ name: 'login' }"
-              href="#"
+              :to="{ name: 'home' }"
               class="text-decoration-none"
               data-abc="true"
             >
