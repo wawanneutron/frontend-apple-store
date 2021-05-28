@@ -5,11 +5,15 @@ const product = {
 
   state: {
     products: [],
+    detailProduct: {},
   },
 
   mutations: {
     GET_PRODUCTS(state, products) {
       state.products = products;
+    },
+    GET_DETAIL_PRODUCT(state, product) {
+      state.detailProduct = product;
     },
   },
 
@@ -26,11 +30,25 @@ const product = {
           console.log(error);
         });
     },
+    getDetailProduct({ commit }, slug) {
+      Api.get(`/product/${slug}`)
+        .then((response) => {
+          commit("GET_DETAIL_PRODUCT", response.data.product);
+          console.log("detail product");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 
   getters: {
     getProducts(state) {
       return state.products;
+    },
+
+    getDetailProduct(state) {
+      return state.detailProduct;
     },
   },
 };

@@ -23,7 +23,7 @@
           />
         </div>
       </div>
-      <div class="row">
+      <div class="row justify-content-center">
         <div
           v-for="product of products"
           :key="product.id"

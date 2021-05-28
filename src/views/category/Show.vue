@@ -5,14 +5,13 @@
       <div class="col-md-12">
         <h4 class="font-weight-bold">
           <i class="fa fa-shopping-bag mr-2"></i>Product Berdasarkan Kategori
-          {{}}
         </h4>
         <hr
           style="border-top: 4px solid rgb(154 155 156); border-radius: 0.5rem"
         />
       </div>
     </div>
-    <div class="row">
+    <div v-if="products.length > 0" class="row justify-content-center">
       <div
         v-for="product of products"
         :key="product.id"
@@ -58,6 +57,11 @@
             >
           </div>
         </div>
+      </div>
+    </div>
+    <div v-else class="row alert alert-warning">
+      <div class="col-12 text-center justify-content-center">
+        <h5>Product Category Kosong</h5>
       </div>
     </div>
   </div>

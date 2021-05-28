@@ -50,7 +50,7 @@
               <tr>
                 <td>Total pembelian</td>
                 <td>:</td>
-                <td>Rp. {{ detailOrder.grand_total }}</td>
+                <td>Rp. {{ (detailOrder.grand_total) }}</td>
               </tr>
               <tr>
                 <td>Status</td>
