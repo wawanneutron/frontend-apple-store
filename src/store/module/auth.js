@@ -96,6 +96,10 @@ const auth = {
         //commit ke mutation AUTH_LOGOUT
         commit("AUTH_LOGOUT");
 
+        /* commit ke module cart, untuk set mutation
+        dan state cart menadi kosong */
+        commit("cart/GET_CART", 0, { root: true });
+        commit("cart/TOTAL_CART", 0, { root: true });
         //remove value dari localStorage
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -134,6 +138,17 @@ const auth = {
 
             // commit get user ke mutation
             commit("GET_USER", user);
+
+            /* 
+              commit cart total dan cart count ke state yang ada di module cart
+            */
+            Api.get("/cart").then((response) => {
+              commit("cart/GET_CART", response.data.cart, { root: true }); //tambahkan root menjadi true untuk lintas modul
+            });
+
+            Api.get("/cart/total").then((response) => {
+              commit("cart/TOTAL_CART", response.data.total, { root: true }); //tambahkan root menjadi true untuk lintas modul
+            });
 
             // resolve ke komponent dengan hasil response
             resolve(response);

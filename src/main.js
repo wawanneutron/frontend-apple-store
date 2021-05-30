@@ -22,6 +22,8 @@ app.mixin({
             return thousands
         },
 
+  
+
         //calculate discount
         calculateDiscount(product) {
             return product.price - (product.price *(product.discount)/100)

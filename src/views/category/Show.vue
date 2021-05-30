@@ -5,6 +5,7 @@
       <div class="col-md-12">
         <h4 class="font-weight-bold">
           <i class="fa fa-shopping-bag mr-2"></i>Product Berdasarkan Kategori
+          "{{ convertToSlug(route.params.slug) }}"
         </h4>
         <hr
           style="border-top: 4px solid rgb(154 155 156); border-radius: 0.5rem"
@@ -61,7 +62,9 @@
     </div>
     <div v-else class="row alert alert-warning">
       <div class="col-12 text-center justify-content-center">
-        <h5>Product Category Kosong</h5>
+        <h5>
+          Product Category "{{ convertToSlug(route.params.slug) }}" Kosong
+        </h5>
       </div>
     </div>
   </div>
@@ -84,10 +87,26 @@ export default {
       return store.getters["category/getProductOnCategory"];
     });
 
+    const convertToSlug = (Text) => {
+      return Text.toUpperCase()
+        .replace(/ /g, "-")
+        .replace(/[^\w]+/g, " ");
+    };
+
+    const formatRupiah = (money) => {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(money);
+    };
+
     return {
       route,
       store,
       products,
+      convertToSlug,
+      formatRupiah,
     };
   },
 };
