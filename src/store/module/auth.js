@@ -89,29 +89,6 @@ const auth = {
       });
     },
 
-    //action logout
-    logout({ commit }) {
-      //define callback promise
-      return new Promise((resolve) => {
-        //commit ke mutation AUTH_LOGOUT
-        commit("AUTH_LOGOUT");
-
-        /* commit ke module cart, untuk set mutation
-        dan state cart menadi kosong */
-        commit("cart/GET_CART", 0, { root: true });
-        commit("cart/TOTAL_CART", 0, { root: true });
-        //remove value dari localStorage
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-
-        //delete header axios
-        delete Api.defaults.headers.common["Authorization"];
-
-        //return resolve ke component
-        resolve();
-      });
-    },
-
     // action login
     login({ commit }, user) {
       // define collback promise
@@ -159,6 +136,30 @@ const auth = {
             // reject ke komponent dengan hasil response
             reject(error.response.data);
           });
+      });
+    },
+
+    //action logout
+    logout({ commit }) {
+      //define callback promise
+      return new Promise((resolve) => {
+        //commit ke mutation AUTH_LOGOUT
+        commit("AUTH_LOGOUT");
+
+        /* commit ke module cart, untuk set mutation
+        dan state cart menadi kosong */
+        commit("cart/GET_CART", 0, { root: true });
+        commit("cart/TOTAL_CART", 0, { root: true });
+
+        //remove value dari localStorage
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        //delete header axios
+        delete Api.defaults.headers.common["Authorization"];
+
+        //return resolve ke component
+        resolve();
       });
     },
   },

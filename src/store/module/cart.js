@@ -6,6 +6,7 @@ const cart = {
   state: {
     cart: [],
     cartTotal: 0,
+    cartWeight: 0,
   },
 
   mutations: {
@@ -15,6 +16,10 @@ const cart = {
 
     TOTAL_CART(state, total) {
       state.cartTotal = total;
+    },
+
+    CART_WEIGHT(state, totalWeight) {
+      state.cartWeight = totalWeight;
     },
   },
 
@@ -67,6 +72,41 @@ const cart = {
       Api.defaults.headers.common["Authorization"] = "Bearer " + token;
       Api.get("/cart/total").then((response) => {
         commit("TOTAL_CART", response.data.total);
+      });
+    },
+
+    // action cartWeight
+    cartWeight({ commit }) {
+      const token = localStorage.getItem("token");
+      Api.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+      Api.get("cart/total-weight").then((response) => {
+        commit("CART_WEIGHT", response.data.total);
+      });
+    },
+
+    // action remove cart
+    removeCart({ commit }, cart_id) {
+      const token = localStorage.getItem("token");
+      Api.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+      Api.post("cart/remove", {
+        cart_id: cart_id,
+      }).then(() => {
+        //get cart
+        Api.get("/cart").then((response) => {
+          commit("GET_CART", response.data.cart);
+        });
+
+        //get total cart
+        Api.get("/cart/total").then((response) => {
+          commit("TOTAL_CART", response.data.total);
+        });
+
+        //get total cart weight
+        Api.get("cart/total-weight").then((response) => {
+          commit("CART_WEIGHT", response.data.total);
+        });
       });
     },
   },

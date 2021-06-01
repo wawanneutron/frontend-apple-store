@@ -25,6 +25,15 @@ const routes = [
     component: () => import("@/views/category/Show.vue"),
   },
   {
+    path: "/cart",
+    name: "cart",
+    component: () => import("@/views/cart/Index.vue"),
+    // check is loggedIn
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/register",
     name: "register",
     component: () => import("@/views/auth/Register.vue"),

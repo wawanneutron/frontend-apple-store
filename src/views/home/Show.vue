@@ -21,10 +21,10 @@
               style="font-size: 1.35rem"
             >
               <span class="font-weight-bold mr-4" style="color: green"
-                >Rp. {{ (calculateDiscount(product)) }}</span
+                >Rp. {{ calculateDiscount(product) }}</span
               >
               <s class="font-weight-bold" style="text-decoration-color: red"
-                >Rp. {{ (product.price) }}</s
+                >Rp. {{ product.price }}</s
               >
             </div>
             <table class="table table-borderless mt-3">
