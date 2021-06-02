@@ -211,6 +211,7 @@
                       >JNE</label
                     >
                   </div>
+
                   <div class="form-check form-check-inline">
                     <input
                       type="radio"
@@ -249,6 +250,9 @@
                   <hr />
                   <label class="font-weight-bold mb-3">Service Kurir</label>
                   <br />
+                  <div class="alert alert-danger" v-if="state.costs == 0">
+                    <span>Pengiriman {{ state.courier_type }} Tidak ada</span>
+                  </div>
                   <div
                     v-for="value in state.costs"
                     :key="value.service"
@@ -258,7 +262,7 @@
                       type="radio"
                       class="form-check-input mb-3"
                       :id="value.service"
-                      :value="value.cost[0].value + '|' + value.service"
+                      :value="value.cost[0].value + value.service"
                       v-model="state.costService"
                       @change="getCostService"
                     />
@@ -273,6 +277,19 @@
                 </div>
               </div>
 
+              <div class="col-md-12" v-if="state.etd">
+                <div>
+                  <label class="font-weight-bold mb-3">Estimasi Sampai</label>
+                  <br />
+                  <span v-if="state.courier_type == 'pos'"
+                    >{{ state.costs[0].cost[0].etd }} Pengiriman</span
+                  >
+                  <span v-else
+                    >{{ state.costs[0].cost[0].etd }} Hari Pengiriman</span
+                  >
+                </div>
+                <hr />
+              </div>
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="font-weight-bold" id="alamat"
@@ -358,6 +375,7 @@ export default {
       costService: "",
       courier_cost: 0,
       courier_service: "",
+      etd: false,
       buttonCheckout: false,
       grandTotal: 0,
     });
@@ -424,7 +442,7 @@ export default {
 
     // fungsi untuk menampilkan biaya ongkos kirim dan service kurir
     const getCostService = () => {
-      // hapus string -> | , dengan split
+      // ubah string menjadi array
       let shipping = state.costService.split("|");
       // set state cost dengan service
       state.courier_cost = shipping[0];
@@ -441,6 +459,7 @@ export default {
 
       // show button checkout
       state.buttonCheckout = true;
+      state.etd = true;
     };
 
     return {
