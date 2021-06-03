@@ -251,7 +251,11 @@
                   <label class="font-weight-bold mb-3">Service Kurir</label>
                   <br />
                   <div class="alert alert-danger" v-if="state.costs == 0">
-                    <span>Pengiriman {{ state.courier_type }} Tidak ada</span>
+                    <span
+                      >Pengiriman
+                      <b>{{ state.courier_type.toUpperCase() }}</b> tidak ada ke
+                      kota tujuan anda</span
+                    >
                   </div>
                   <div
                     v-for="value in state.costs"
@@ -262,7 +266,7 @@
                       type="radio"
                       class="form-check-input mb-3"
                       :id="value.service"
-                      :value="value.cost[0].value + value.service"
+                      :value="value.cost[0].value + '|' + value.service"
                       v-model="state.costService"
                       @change="getCostService"
                     />
@@ -276,17 +280,23 @@
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-12" v-if="state.etd">
-                <div>
+              <!-- estimasi -->
+              <div class="col-md-12">
+                <div v-if="state.etd">
                   <label class="font-weight-bold mb-3">Estimasi Sampai</label>
                   <br />
                   <span v-if="state.courier_type == 'pos'"
                     >{{ state.costs[0].cost[0].etd }} Pengiriman</span
                   >
                   <span v-else
-                    >{{ state.costs[0].cost[0].etd }} Hari Pengiriman</span
-                  >
+                    >{{
+                      state.costs == 0
+                        ? ((state.etd = false),
+                          (state.courier_cost = 0),
+                          (state.grandTotal = 0))
+                        : state.costs[0].cost[0].etd + " Hari Pengiriman"
+                    }}
+                  </span>
                 </div>
                 <hr />
               </div>
@@ -330,10 +340,12 @@
 import { computed, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import Api from "../../api/Api";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
 
     onMounted(() => {
       // store.dispatch("cart/cartCount");
@@ -354,11 +366,16 @@ export default {
     });
 
     /* function hapus data cart */
-    const removeCart = (cart_id) => store.dispatch("cart/removeCart", cart_id);
-
+    const removeCart = (cart_id) => {
+      if (confirm("Do you want to delete ?")) {
+        store.dispatch("cart/removeCart", cart_id);
+      }
+    };
+    /*  */
     /*
     ongkos kirim 
      */
+    /*  */
     //  difine state form
     const state = reactive({
       name: "",
@@ -379,6 +396,7 @@ export default {
       buttonCheckout: false,
       grandTotal: 0,
     });
+
     // define state validation
     const validation = reactive({
       name: false,
@@ -457,9 +475,57 @@ export default {
           parseInt(response.data.total) + parseInt(state.courier_cost);
       });
 
+      // uppercase
+
       // show button checkout
       state.buttonCheckout = true;
       state.etd = true;
+    };
+
+    const checkout = () => {
+      // check apakah ada nama, phone, address, dan berat product
+      if (state.name && state.phone && state.address && cartWeight.value) {
+        // define variable
+        let data = {
+          name: state.name,
+          phone: state.phone,
+          province_id: state.province_id,
+          city_id: state.city_id,
+          courier_type: state.courier_type,
+          courier_service: state.courier_service,
+          cost_courier: state.courier_cost,
+          weight: cartWeight.value,
+          address: state.address,
+          grandTotal: state.grandTotal,
+        }
+        store.dispatch("cart/checkout", data)
+          .then((response) => {
+            // jika berhasil, arahkan kedetail order dengan parameter snap_token midtrans
+            router.push({
+              name: "detail_order",
+              params: {
+                snap_token: response[0].snap_token,
+              },
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      /* 
+      check validasi 
+      jika state tidak ada isinya validasi bernilai true*/
+      if (!state.name) {
+        validation.name = true;
+      }
+
+      if (!state.phone) {
+        validation.phone = true;
+      }
+
+      if (!state.address) {
+        validation.address = true;
+      }
     };
 
     return {
@@ -475,6 +541,7 @@ export default {
       getCourier,
       getOngkir,
       getCostService,
+      checkout,
     };
   },
 };
