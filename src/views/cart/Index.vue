@@ -424,6 +424,7 @@ export default {
       })
         .then((response) => {
           state.cities = response.data.data;
+          console.log(state.cities);
         })
         .catch((error) => {
           console.log(error);
@@ -497,8 +498,9 @@ export default {
           weight: cartWeight.value,
           address: state.address,
           grandTotal: state.grandTotal,
-        }
-        store.dispatch("cart/checkout", data)
+        };
+        store
+          .dispatch("cart/checkout", data)
           .then((response) => {
             // jika berhasil, arahkan kedetail order dengan parameter snap_token midtrans
             router.push({
