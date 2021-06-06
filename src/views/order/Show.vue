@@ -92,6 +92,7 @@
                     </button>
                     <div class="alert alert-success mt-3">
                       Pembelian telah selesai <br />
+                      Terimakasih sudah berbelanja di Toko Online kami
                     </div>
                   </div>
 
@@ -287,10 +288,10 @@
             <table
               class="table table-responsive table-bordered text-uppercase mb-3 h6"
             >
-              <tr v-for="item in histories" :key="item.date">
-                <td class="col-6">Tanggal</td>
-                <td class="">:</td>
-                <td class="col-6">{{ item.date }}</td>
+              <tr v-for="data of state.histories" :key="data">
+                <template v-for="(item, index) of data" :key="index">
+                  <td class="col-6">{{ item }}</td>
+                </template>
               </tr>
             </table>
           </div>
@@ -378,7 +379,7 @@ export default {
       histories: [], //history pengiriman
     });
 
-    let cekResi = () => {
+    const cekResi = () => {
       if (detailOrder.value.courier == "jne") {
         Api.get("/v1/track", {
           params: {
@@ -389,14 +390,18 @@ export default {
         })
           .then((response) => {
             let sumary = response.data.data.summary;
-            let history = response.data.data.history;
+            let dataHistory = response.data.data.history;
+
+            const history = dataHistory.map((elmn) => {
+              return elmn;
+            });
+
+            state.histories = history;
+            console.log(state.histories);
 
             state.data_resi = sumary;
-            state.histories = history;
-            console.log(state.data_resi);
-            console.log(state.histories);
+            // state.histories = history;
           })
-
           .catch((error) => {
             console.log(error);
           });
