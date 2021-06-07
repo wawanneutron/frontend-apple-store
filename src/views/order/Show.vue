@@ -63,8 +63,12 @@
                     >
                       BAYAR SEKARANG
                     </button>
+                    <div class="alert alert-warning mt-2">
+                      Verifikasi dilakukan secara otomatis
+                    </div>
                     <div class="alert alert-info mt-3">
-                      Status pembayan anda {{ detailOrder.status }} <br />
+                      Status pembayan anda <b>{{ detailOrder.status }}</b>
+                      <br />
                       Silahkan melakukan pembayaran sekarang
                     </div>
                   </div>
@@ -251,14 +255,9 @@
             </h6>
             <table class="table table-responsive table-info text-uppercase h6">
               <tr>
-                <td class="col-6">Tanggal</td>
-                <td class="">:</td>
-                <td class="col-6">{{ state.data_resi.date }}</td>
-              </tr>
-              <tr>
-                <td>Desc</td>
+                <td>No Resi</td>
                 <td>:</td>
-                <td>{{ state.data_resi.desc }}</td>
+                <td>{{ state.data_resi.awb }}</td>
               </tr>
               <tr>
                 <td>Status</td>
@@ -266,19 +265,35 @@
                 <td>{{ state.data_resi.status }}</td>
               </tr>
               <tr>
-                <td>No Resi</td>
+                <td>Service</td>
                 <td>:</td>
-                <td>{{ state.data_resi.awb }}</td>
+                <td>{{ state.data_resi.service }}</td>
               </tr>
+              <tr>
+                <td class="col-6">Dikirm Tanggal</td>
+                <td class="">:</td>
+                <td class="col-6">{{ state.data_resi.date }}</td>
+              </tr>
+              <tr>
+                <td>Dikirm Oleh</td>
+                <td>:</td>
+                <td>{{ state.details.shipper }}</td>
+              </tr>
+              <tr>
+                <td>Dikirm Ke</td>
+                <td>:</td>
+                <td>{{ state.details.destination }}</td>
+              </tr>
+              <tr>
+                <td>Desc</td>
+                <td>:</td>
+                <td>{{ state.data_resi.desc }}</td>
+              </tr>
+
               <tr>
                 <td>Courier</td>
                 <td>:</td>
                 <td>{{ state.data_resi.courier }}</td>
-              </tr>
-              <tr>
-                <td>Service</td>
-                <td>:</td>
-                <td>{{ state.data_resi.service }}</td>
               </tr>
             </table>
             <!-- information status tracking -->
@@ -288,6 +303,10 @@
             <table
               class="table table-responsive table-bordered text-uppercase mb-3 h6"
             >
+              <tr>
+                <th>Tangal</th>
+                <th>Keterangan</th>
+              </tr>
               <tr v-for="data of state.histories" :key="data">
                 <template v-for="(item, index) of data" :key="index">
                   <td class="col-6">{{ item }}</td>
@@ -376,6 +395,7 @@ export default {
       api_key:
         "a4020d997938fd6b233b295bab207e442a6bab2e697a10bb5149d7418586f168",
       data_resi: {},
+      details: {},
       histories: [], //history pengiriman
     });
 
@@ -391,16 +411,15 @@ export default {
           .then((response) => {
             let sumary = response.data.data.summary;
             let dataHistory = response.data.data.history;
+            let detail = response.data.data.detail;
 
             const history = dataHistory.map((elmn) => {
               return elmn;
             });
 
             state.histories = history;
-            console.log(state.histories);
-
             state.data_resi = sumary;
-            // state.histories = history;
+            state.details = detail;
           })
           .catch((error) => {
             console.log(error);

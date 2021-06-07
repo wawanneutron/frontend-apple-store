@@ -18,7 +18,8 @@
                 <tr class="text-center">
                   <th>invoice</th>
                   <th>Full name</th>
-                  <th>Shipping</th>
+                  <th>Courier</th>
+                  <th>Status</th>
                   <th>Grand Total</th>
                   <th>Option</th>
                 </tr>
@@ -30,6 +31,9 @@
                   <td>
                     {{ order.courier }} | {{ order.service }} | Rp.
                     {{ moneyFormat(order.cost_courier) }}
+                  </td>
+                  <td>
+                    {{ order.status }}
                   </td>
                   <td>Rp. {{ moneyFormat(order.grand_total) }}</td>
                   <td class="text-center">

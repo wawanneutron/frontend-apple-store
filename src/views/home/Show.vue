@@ -57,6 +57,22 @@
                     >
                   </td>
                 </tr>
+                <tr>
+                  <td class="font-weight-bold">STOCK</td>
+                  <td>:</td>
+                  <td>
+                    <span
+                      class="badge badge-pill badge-warning"
+                      style="
+                        font-size: 14px;
+                        border-radius: 0.3rem;
+                        padding: 0.25em 0.5em 0.2em;
+                      "
+                    >
+                      {{ product.stock }} stock</span
+                    >
+                  </td>
+                </tr>
               </tbody>
             </table>
             <button
