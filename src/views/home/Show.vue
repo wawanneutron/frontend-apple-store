@@ -14,6 +14,9 @@
             <label class="font-weight-bold" style="font-size: 20px">
               {{ product.title }}
             </label>
+            <div class="alert alert-danger" v-if="product.stock == 0">
+              <p>Upps maaf stock barang sedang kosong</p>
+            </div>
             <hr />
             <div
               class="price-product"
@@ -75,18 +78,25 @@
                 </tr>
               </tbody>
             </table>
-            <button
-              @click.prevent="
-                addToCart(
-                  product.id,
-                  calculateDiscount(product),
-                  product.weight
-                )
-              "
-              class="btn btn-primary btn-lg btn-block"
-            >
-              <i class="fa fa-shopping-cart"></i> TAMBAH KE KERANJANG
-            </button>
+            <div v-if="product.stock == 0">
+              <button class="btn btn-danger btn-lg btn-block">
+                <i class="fa fa-shopping-cart"></i> STOCK KOSONG
+              </button>
+            </div>
+            <div v-else>
+              <button
+                @click.prevent="
+                  addToCart(
+                    product.id,
+                    calculateDiscount(product),
+                    product.weight
+                  )
+                "
+                class="btn btn-primary btn-lg btn-block"
+              >
+                <i class="fa fa-shopping-cart"></i> TAMBAH KE KERANJANG
+              </button>
+            </div>
           </div>
         </div>
       </div>
