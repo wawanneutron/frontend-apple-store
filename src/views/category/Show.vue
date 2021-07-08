@@ -21,7 +21,7 @@
         <div class="card h-100 border-0 shadow rounded-md">
           <div class="card-img">
             <img
-              :src="product.image"
+              :src="product.gallery[0].image"
               class="w-100"
               style="
                 height: 15em;

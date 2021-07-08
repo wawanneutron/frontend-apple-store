@@ -11,7 +11,11 @@
               <i class="fas fa-shopping-cart mr-2"></i>Detail Order
             </h5>
             <table
-              class="table table-striped table-bordered mt-4 table-responsive-lg"
+              class="
+                table table-striped table-bordered
+                mt-4
+                table-responsive-lg
+              "
             >
               <tr>
                 <td style="width: 25%">No Invoice</td>
@@ -189,7 +193,7 @@
                   <td class="b-none" width="25%">
                     <div class="wrapper-image-cart">
                       <img
-                        :src="product.image"
+                        :src="product.product.gallery[0].image"
                         style="width: 100%; border-radius: 0.5rem"
                       />
                     </div>
@@ -301,7 +305,12 @@
               <i class="fas fa-car mr-2"></i> Information status tracking
             </h6>
             <table
-              class="table table-responsive table-bordered text-uppercase mb-3 h6"
+              class="
+                table table-responsive table-bordered
+                text-uppercase
+                mb-3
+                h6
+              "
             >
               <tr>
                 <th>Tangal</th>
