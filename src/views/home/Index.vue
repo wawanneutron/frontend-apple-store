@@ -50,7 +50,7 @@
         <div
           v-for="product of productsTerlaris"
           :key="product.id"
-          class="col-md-3 col-6 mb-3"
+          class="col-md-3 mb-3 mb-5"
           style="padding: 0 4px"
         >
           <div class="card h-100 border-0 shadow rounded-md">
@@ -91,6 +91,19 @@
                 class="btn btn-primary btn-md mt-3 btn-block shadow-md"
                 >LIHAT PRODUK</router-link
               >
+            </div>
+            <div
+              style="display: inline-block; margin: 0 auto"
+              class="card-body"
+            >
+              <star-rating
+                :inline="true"
+                :star-size="20"
+                :read-only="true"
+                :show-rating="false"
+                :rating="4"
+              ></star-rating>
+              <span class="ml-2">(<b>7</b> ulasan)</span>
             </div>
           </div>
         </div>
@@ -138,7 +151,7 @@
         <div
           v-for="product of products"
           :key="product.id"
-          class="col-md-3 col-6 mb-3"
+          class="col-md-3 col-6 mb-3 mb-5"
           style="padding: 0 4px"
         >
           <div class="card h-100 border-0 shadow rounded-md">
@@ -180,6 +193,19 @@
                 >LIHAT PRODUK</router-link
               >
             </div>
+            <div
+              style="display: inline-block; margin: 0 auto"
+              class="card-body"
+            >
+              <star-rating
+                :inline="true"
+                :star-size="20"
+                :read-only="true"
+                :show-rating="false"
+                :rating="5"
+              ></star-rating>
+              <span class="ml-2">(<b>7</b> ulasan)</span>
+            </div>
           </div>
         </div>
       </div>
@@ -193,6 +219,7 @@ import Sliders from "@/components/Slider.vue";
 import { useStore } from "vuex";
 import { computed, onMounted } from "vue";
 import { FacebookLoader } from "vue-content-loader";
+import StarRating from "vue-star-rating";
 // import { ListLoader } from "vue-content-loader";
 // import { BulletListLoader } from "vue-content-loader";
 // import { CodeLoader } from "vue-content-loader";
@@ -202,6 +229,7 @@ export default {
     Category,
     Sliders,
     FacebookLoader,
+    StarRating,
     // ListLoader,
     // BulletListLoader,
     // CodeLoader,

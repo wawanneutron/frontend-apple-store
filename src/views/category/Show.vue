@@ -57,6 +57,16 @@
               >LIHAT PRODUK</router-link
             >
           </div>
+          <div style="display: inline-block; margin: 0 auto" class="card-body">
+            <star-rating
+              :inline="true"
+              :star-size="20"
+              :read-only="true"
+              :show-rating="false"
+              :rating="5"
+            ></star-rating>
+            <span class="ml-2">(<b>7</b> ulasan)</span>
+          </div>
         </div>
       </div>
     </div>
@@ -74,7 +84,12 @@
 import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import StarRating from "vue-star-rating";
+
 export default {
+  components:{
+    StarRating
+  },
   setup() {
     const store = useStore();
     const route = useRoute();

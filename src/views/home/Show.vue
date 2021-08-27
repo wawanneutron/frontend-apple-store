@@ -150,12 +150,96 @@
       <div class="col-md-12">
         <div class="card border-0 rounded shadow">
           <div class="card-body">
-            <label class="font-weight-bold" style="font-size: 20px"
-              >KETERANGAN</label
-            >
-            <hr />
-            <star-rating />
-            <div v-html="product.content"></div>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a
+                  class="nav-link active"
+                  id="detail-tab"
+                  data-toggle="tab"
+                  href="#detail"
+                  role="tab"
+                  aria-controls="detail"
+                  aria-selected="true"
+                  >Detail Produk</a
+                >
+              </li>
+              <li class="nav-item" role="presentation">
+                <a
+                  class="nav-link"
+                  id="ulasan-tab"
+                  data-toggle="tab"
+                  href="#ulasan"
+                  role="tab"
+                  aria-controls="ulasan"
+                  aria-selected="false"
+                  ><i class="fa fa-comments"></i> Ulasan Produk (2 ulasan)</a
+                >
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div
+                class="tab-pane fade show active"
+                id="detail"
+                role="tabpanel"
+                aria-labelledby="detail-tab"
+              >
+                <div class="mt-4" v-html="product.content"></div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="ulasan"
+                role="tabpanel"
+                aria-labelledby="ulasan-tab"
+              >
+                <div class="ulasan mt-5">
+                  <ul class="list-unstyled">
+                    <div class="card card-body mt-5">
+                      <li class="media">
+                        <img
+                          src="/logo.png"
+                          class="mr-3"
+                          width="50"
+                          alt="profile"
+                        />
+                        <div class="media-body">
+                          <star-rating
+                            v-bind:show-rating="false"
+                            v-bind:star-size="25"
+                            v-bind:read-only="true"
+                            v-bind:rating="5"
+                          ></star-rating>
+                          <h5 class="mt-0 mb-1">John Doe</h5>
+                          <p>Barang oke pengiriman cepat</p>
+                        </div>
+                      </li>
+                    </div>
+                    <div class="card card-body mt-5">
+                      <li class="media">
+                        <img
+                          src="/logo.png"
+                          class="mr-3"
+                          width="50"
+                          alt="profile"
+                        />
+                        <div class="media-body">
+                          <star-rating
+                            v-bind:show-rating="false"
+                            v-bind:star-size="25"
+                            v-bind:read-only="true"
+                            v-bind:rating="2.5"
+                          >
+                          </star-rating>
+                          <h5 class="mt-0 mb-1">Lim Dan</h5>
+                          <p>
+                            pengiriman cepat dan produk original. Terima Kasih
+                          </p>
+                        </div>
+                      </li>
+                    </div>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
