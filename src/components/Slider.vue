@@ -1,5 +1,8 @@
 <template>
-  <div id="carousel" class="carousel slide" data-ride="carousel">
+  <div v-if="state.loading <= 0">
+    <content-loader></content-loader>
+  </div>
+  <div id="carousel" class="carousel slide" data-ride="carousel" v-else>
     <div class="carousel-inner">
       <div
         class="carousel-item"
@@ -38,12 +41,20 @@
 </template>
 
 <script>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
+import { ContentLoader } from "vue-content-loader";
+
 export default {
+  components: {
+    ContentLoader,
+  },
+
   setup() {
     const store = useStore();
-
+    const state = reactive({
+      loading: "",
+    });
     onMounted(() => {
       store.dispatch("slider/getSliders");
     });
@@ -51,11 +62,24 @@ export default {
     const sliders = computed(() => {
       return store.getters["slider/getSliders"];
     });
+    state.loading = sliders;
+    console.log(state.loading);
 
     return {
       store,
       sliders,
+      state,
     };
   },
+  // data() {
+  //   return {
+  //     myData: null,
+  //   };
+  // },
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.myData = "Example Data";
+  //   }, 5000);
+  // },
 };
 </script>

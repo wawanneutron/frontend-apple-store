@@ -23,7 +23,30 @@
           />
         </div>
       </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center" v-if="productsTerlaris <= 0">
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center" v-else>
         <div
           v-for="product of productsTerlaris"
           :key="product.id"
@@ -88,7 +111,30 @@
           />
         </div>
       </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center" v-if="products <= 0">
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <facebook-loader />
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center" v-else>
         <div
           v-for="product of products"
           :key="product.id"
@@ -146,27 +192,40 @@ import Category from "@/components/Category.vue";
 import Sliders from "@/components/Slider.vue";
 import { useStore } from "vuex";
 import { computed, onMounted } from "vue";
+import { FacebookLoader } from "vue-content-loader";
+// import { ListLoader } from "vue-content-loader";
+// import { BulletListLoader } from "vue-content-loader";
+// import { CodeLoader } from "vue-content-loader";
+
 export default {
   components: {
     Category,
     Sliders,
+    FacebookLoader,
+    // ListLoader,
+    // BulletListLoader,
+    // CodeLoader,
   },
+
   setup() {
     // store vuex
     const store = useStore();
-    // panggil action getProducts di module product vuex
 
+    // onMounted pertama kali object dibuat
     onMounted(() => {
       store.dispatch("product/getProductsHome");
+    });
+    onMounted(() => {
+      store.dispatch("product/getTerlaris");
     });
     //computed properti digunakan untuk get data products dari state di module product
     const products = computed(() => {
       return store.getters["product/getProductsHome"];
     });
-    // products terlaris
     const productsTerlaris = computed(() => {
       return store.getters["product/getProductsTerlaris"];
     });
+
     return {
       store,
       products,

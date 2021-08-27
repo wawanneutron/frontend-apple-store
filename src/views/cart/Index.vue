@@ -18,7 +18,7 @@
                   <td width="25%">
                     <div class="image-cart">
                       <img
-                        :src="cart.product.image"
+                        :src="cart.product.gallery[0].image"
                         style="width: 100%; border-radius: 0.5rem"
                       />
                     </div>
@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 rincian-pengiriman">
         <div class="card border-0 shadow rounded">
           <div class="card-body">
             <h5><i class="fa fa-user circle mr-2"></i>Rincian Pengiriman</h5>
@@ -196,6 +196,7 @@
                 <div class="form-group" v-if="state.courier">
                   <label class="font-weight-bold mb-3">Kurir Pengiriman</label>
                   <br />
+                  <!-- jne -->
                   <div class="form-check form-check-inline">
                     <input
                       type="radio"
@@ -211,7 +212,7 @@
                       >JNE</label
                     >
                   </div>
-
+                  <!-- tiki -->
                   <div class="form-check form-check-inline">
                     <input
                       type="radio"
@@ -227,6 +228,7 @@
                       >TIKI</label
                     >
                   </div>
+                  <!-- pos -->
                   <div class="form-check form-check-inline">
                     <input
                       type="radio"
@@ -246,37 +248,39 @@
               </div>
               <!-- service kurir serta ongkos kirim -->
               <div class="col-md-12">
-                <div class="form-group" v-if="state.cost">
-                  <hr />
-                  <label class="font-weight-bold mb-3">Service Kurir</label>
-                  <br />
-                  <div class="alert alert-danger" v-if="state.costs == 0">
-                    <span
-                      >Pengiriman
-                      <b>{{ state.courier_type.toUpperCase() }}</b> tidak ada ke
-                      kota tujuan anda</span
+                <div class="form-group">
+                  <div v-if="state.cost">
+                    <hr />
+                    <label class="font-weight-bold mb-3">Service Kurir</label>
+                    <br />
+                    <div class="alert alert-danger" v-if="state.costs == 0">
+                      <span
+                        >Pengiriman
+                        <b>{{ state.courier_type.toUpperCase() }}</b> tidak ada
+                        ke kota tujuan anda</span
+                      >
+                    </div>
+                    <div
+                      v-for="value in state.costs"
+                      :key="value.service"
+                      class="form-check form-check-inline"
                     >
-                  </div>
-                  <div
-                    v-for="value in state.costs"
-                    :key="value.service"
-                    class="form-check form-check-inline"
-                  >
-                    <input
-                      type="radio"
-                      class="form-check-input mb-3"
-                      :id="value.service"
-                      :value="value.cost[0].value + '|' + value.service"
-                      v-model="state.costService"
-                      @change="getCostService"
-                    />
-                    <label
-                      :for="value.service"
-                      class="form-check-label font-weight-normal mr-5 mb-3"
-                    >
-                      {{ value.service }} - Rp.
-                      {{ moneyFormat(value.cost[0].value) }}
-                    </label>
+                      <input
+                        type="radio"
+                        class="form-check-input mb-3"
+                        :id="value.service"
+                        :value="value.cost[0].value + '|' + value.service"
+                        v-model="state.costService"
+                        @change="getCostService"
+                      />
+                      <label
+                        :for="value.service"
+                        class="form-check-label font-weight-normal mr-5 mb-3"
+                      >
+                        {{ value.service }} - Rp.
+                        {{ moneyFormat(value.cost[0].value) }}
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -320,13 +324,25 @@
                   </div>
                 </div>
               </div>
-              <div v-if="state.buttonCheckout" class="col-md-12">
+              <div
+                v-if="state.buttonCheckout || checkout.length > 0"
+                class="col-md-12"
+              >
                 <button
                   @click.prevent="checkout"
                   class="btn btn-primary btn-lg btn-block text-uppercase"
                 >
                   checkout
                 </button>
+              </div>
+              <div class="col-md-12" v-else>
+                <div v-if="state.buttonLoading">
+                  <button
+                    class="btn btn-success btn-lg btn-block text-uppercase"
+                  >
+                    <i class="fa fa-spinner fa-spin"></i>Loading
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -394,6 +410,7 @@ export default {
       courier_service: "",
       etd: false,
       buttonCheckout: false,
+      buttonLoading: false,
       grandTotal: 0,
     });
 
@@ -486,6 +503,9 @@ export default {
     const checkout = () => {
       // check apakah ada nama, phone, address, dan berat product
       if (state.name && state.phone && state.address && cartWeight.value) {
+        state.buttonLoading = true;
+        state.buttonCheckout = false;
+
         // define variable
         let data = {
           name: state.name,
@@ -548,3 +568,91 @@ export default {
   },
 };
 </script>
+
+
+<style >
+.lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fcf;
+  margin: -4px 0 0 -4px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>

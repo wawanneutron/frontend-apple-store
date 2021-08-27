@@ -1,14 +1,59 @@
 <template>
   <div class="container mt-5 mb-5">
     <div class="row">
-      <div class="col-md-4">
-        <div class="card border-0 rounded shadow">
-          <div class="card-body p-2">
-            <img :src="product.gallery[0].image" class="w-100 border" />
+      <div class="col-md-6">
+        <div class="card" v-if="gallery <= 0">
+          <div class="card-body">
+            <!-- card header -->
+            <content-loader />
+            <!-- thumbnail -->
+            <div class="row mt-3 justify-content-center">
+              <div class="col-md-3 col-4 col-thumbnail">
+                <content-loader />
+              </div>
+              <div class="col-md-3 col-4 col-thumbnail">
+                <content-loader />
+              </div>
+              <div class="col-md-3 col-4 col-thumbnail">
+                <content-loader />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" v-else>
+          <div class="card-body">
+            <!-- card header -->
+            <transition
+              name="slide-fade"
+              mode="out-in"
+              v-if="gallery[photoActive]"
+            >
+              <img
+                :src="gallery[photoActive].image"
+                class="img-store img-fluid w-100"
+              />
+            </transition>
+            <!-- thumbnail -->
+            <div class="row justify-content-center">
+              <div
+                class="col-md-3 col-4 col-thumbnail"
+                v-for="(item, index) of gallery"
+                :key="index"
+              >
+                <main @click="changeActive(index)">
+                  <img
+                    class="w-100 img-thumbnail float-left"
+                    :src="item.image"
+                    :class="{ active: index == photoActive }"
+                  />
+                </main>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+
+      <div class="col-md-6">
         <div class="card border-0 rounded shadow">
           <div class="card-body">
             <label class="font-weight-bold" style="font-size: 20px">
@@ -109,6 +154,7 @@
               >KETERANGAN</label
             >
             <hr />
+            <star-rating />
             <div v-html="product.content"></div>
           </div>
         </div>
@@ -121,7 +167,14 @@
 import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { ContentLoader } from "vue-content-loader";
+import StarRating from "vue-star-rating";
+
 export default {
+  components: {
+    ContentLoader,
+    StarRating,
+  },
   setup() {
     const store = useStore();
     const route = useRoute();
@@ -133,6 +186,10 @@ export default {
 
     const product = computed(() => {
       return store.getters["product/getDetailProduct"];
+    });
+
+    const gallery = computed(() => {
+      return store.getters["product/getGalleries"];
     });
 
     function addToCart(product_id, price, weight) {
@@ -154,7 +211,16 @@ export default {
     return {
       product,
       addToCart,
+      gallery,
     };
+  },
+  data: () => ({
+    photoActive: 0,
+  }),
+  methods: {
+    changeActive(id) {
+      this.photoActive = id;
+    },
   },
 };
 </script>
