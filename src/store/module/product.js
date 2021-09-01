@@ -9,6 +9,8 @@ const product = {
     productsTerlaris: [],
     detailProduct: {},
     galleries: [],
+    reviews: [],
+    reviewCount: [],
   },
 
   mutations: {
@@ -26,6 +28,12 @@ const product = {
     },
     GALLERY(state, gallery) {
       state.galleries = gallery;
+    },
+    GET_REVIEWS(state, review) {
+      state.reviews = review;
+    },
+    GET_REVIEW_COUNT(state, count) {
+      state.reviewCount = count;
     },
   },
 
@@ -54,7 +62,7 @@ const product = {
     getTerlaris({ commit }) {
       Api.get("/products-terlaris")
         .then((response) => {
-          commit("GET_PRODUCTS_TERLARIS", response.data.terlaris);
+          commit("GET_PRODUCTS_TERLARIS", response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -65,6 +73,7 @@ const product = {
         .then((response) => {
           commit("GET_DETAIL_PRODUCT", response.data.product);
           commit("GALLERY", response.data.product.gallery);
+          commit("GET_REVIEWS", response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -87,6 +96,12 @@ const product = {
     },
     getGalleries(state) {
       return state.galleries;
+    },
+    getReviews(state) {
+      return state.reviews;
+    },
+    getReviewCount(state) {
+      return state.reviewCount;
     },
   },
 };

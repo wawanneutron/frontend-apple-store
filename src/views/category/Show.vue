@@ -65,7 +65,7 @@
               :show-rating="false"
               :rating="5"
             ></star-rating>
-            <span class="ml-2">(<b>7</b> ulasan)</span>
+            <span class="ml-2">(<b>{{ product.review.length }}</b> ulasan)</span>
           </div>
         </div>
       </div>

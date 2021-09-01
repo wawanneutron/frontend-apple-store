@@ -63,7 +63,6 @@ export default {
       return store.getters["slider/getSliders"];
     });
     state.loading = sliders;
-    console.log(state.loading);
 
     return {
       store,

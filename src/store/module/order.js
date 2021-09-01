@@ -53,6 +53,31 @@ const order = {
         commit("PRODUCT_IN_ORDER", response.data.product);
       });
     },
+    // submitReview({ order_id, product_id, rating, review }) {
+    //   // get data token dan user
+    //   const token = localStorage.getItem("token");
+    //   const user = JSON.parse(localStorage.getItem("user"));
+
+    //   // set axios header dengan type Authorization + Bearer token
+    //   Api.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+    //   return new Promise((resolve, reject) => {
+    //     // kirim data ke server
+    //     Api.post("/review", {
+    //       order_id: order_id,
+    //       product_id: product_id,
+    //       rating: rating,
+    //       review: review,
+    //       customer_id: user.id,
+    //     })
+    //       .then((response) => {
+    //         resolve(response.data);
+    //       })
+    //       .catch((error) => {
+    //         reject(error);
+    //       });
+    //   });
+    // },
   },
 
   getters: {

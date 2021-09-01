@@ -211,12 +211,92 @@
                         </td>
                       </tr>
                     </table>
+                    <div
+                      @click="
+                        (stateReview.order_id = product.id) &&
+                          (stateReview.product_id = product.product_id)
+                      "
+                      @click.prevent="cekOrderId"
+                      class="btn btn-warning text-uppercase mt-4"
+                      data-toggle="modal"
+                      data-target="#exampleModal"
+                      v-if="detailOrder.status == 'success'"
+                    >
+                      berikan ulasan
+                    </div>
                   </td>
                   <td class="b-none text-right">
                     <p class="m-0 font-weight-bold">
                       Rp. {{ moneyFormat(product.price) }}
                     </p>
                   </td>
+                  <!-- modal review -->
+                  <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            Ulasan Produk
+                          </h5>
+                          <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="false">&times;</span>
+                          </button>
+                        </div>
+                        <!-- handle inputan -->
+                        <div class="modal-body">
+                          <div class="row justify-content-center">
+                            <div class="col-lg-6">
+                              <star-rating
+                                :star-size="50"
+                                :show-rating="false"
+                                v-model:rating="stateReview.rating"
+                              >
+                              </star-rating>
+                            </div>
+                          </div>
+                          <div class="form-group mt-5">
+                            <label class="font-weight-bold" for="ulasan"
+                              >Tulis Ulasan</label
+                            >
+                            <textarea
+                              id="ulasan"
+                              rows="3"
+                              placeholder="Masukkan Ulasan Produk"
+                              class="form-control"
+                              spellcheck="false"
+                              v-model="stateReview.reviewCustomer"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                          >
+                            Close
+                          </button>
+                          <button
+                            @click.prevent="submitReview"
+                            class="btn btn-primary"
+                          >
+                            Kirim
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </tr>
               </tbody>
             </table>
@@ -343,11 +423,14 @@ import CustomerMenu from "@/components/CustomerMenu.vue";
 import { useStore } from "vuex";
 import { computed, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import StarRating from "vue-star-rating";
 import Api from "../../api/Jne";
+import ApiServer from "../../api/Api";
 
 export default {
   components: {
     CustomerMenu,
+    StarRating,
   },
   setup() {
     // store vuex
@@ -438,6 +521,87 @@ export default {
       }
     };
 
+    /* rating atau reaview product oleh customer */
+    // get data token dan user
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    Api.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+    let stateReview = reactive({
+      order_id: "",
+      product_id: "",
+      rating: "",
+      reviewCustomer: "",
+      status: [],
+    });
+
+    // fungsi untuk mengecek length review
+    const cekOrderId = () => {
+      let orderId = stateReview.order_id;
+
+      ApiServer.post("/reviewcek", {
+        order_id: orderId,
+        user_id: user.id,
+      })
+        .then((response) => {
+          stateReview.status = response.data.review;
+          console.log(stateReview.status);
+          if (stateReview.status.length == 0) {
+            alert("silahkan isi ulasan anda");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    // fungsi untuk menambahkan review / ulasan dan rating
+    const submitReview = () => {
+      let orderId = stateReview.order_id;
+      let productId = stateReview.product_id;
+      let rating = stateReview.rating;
+      let review = stateReview.reviewCustomer;
+      console.log(stateReview.status);
+      // cek apakah data ada ?
+      if (stateReview.status.length <= 0) {
+        ApiServer.post("/review", {
+          customer_id: user.id,
+          order_id: orderId,
+          product_id: productId,
+          rating: rating,
+          review: review,
+        });
+
+        // hapus data di form
+        stateReview.rating = "";
+        stateReview.reviewCustomer = "";
+
+        // cek lagi isi reviewnya
+        ApiServer.post("/reviewcek", {
+          order_id: orderId,
+          user_id: user.id,
+        })
+          .then((response) => {
+            stateReview.status = response.data.review;
+            console.log(stateReview.status);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        alert("anda sudah memberikan ulasan");
+        // hapus data di form
+        stateReview.rating = "";
+        stateReview.reviewCustomer = "";
+      }
+
+      console.log(stateReview.reviewCustomer);
+      console.log(stateReview.rating);
+      console.log(stateReview.order_id);
+      console.log(stateReview.product_id);
+    };
+
     return {
       store,
       route,
@@ -447,6 +611,9 @@ export default {
       payment,
       cekResi,
       state,
+      stateReview,
+      submitReview,
+      cekOrderId,
     };
   },
 };

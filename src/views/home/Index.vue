@@ -72,6 +72,7 @@
                 class="card-title font-weight-bold"
                 style="font-size: 20px"
               ></router-link>
+              <p class="font-weight-bold">{{ product.title }}</p>
               <div class="discount mt-2" style="color: #999">
                 <s>Rp. {{ moneyFormat(product.price) }} </s>
                 <span
@@ -95,15 +96,18 @@
             <div
               style="display: inline-block; margin: 0 auto"
               class="card-body"
+              v-if="product.avg_rating != null"
             >
               <star-rating
-                :inline="true"
-                :star-size="20"
-                :read-only="true"
                 :show-rating="false"
-                :rating="4"
+                :star-size="23"
+                :read-only="true"
+                :increment="0.01"
+                :rating="product.avg_rating"
               ></star-rating>
-              <span class="ml-2">(<b>7</b> ulasan)</span>
+              <span class="ml-2"
+                >(<b> {{ product.reviews.length }} </b> ulasan)</span
+              >
             </div>
           </div>
         </div>
@@ -151,7 +155,7 @@
         <div
           v-for="product of products"
           :key="product.id"
-          class="col-md-3 col-6 mb-3 mb-5"
+          class="col-md-3 mb-3 mb-5"
           style="padding: 0 4px"
         >
           <div class="card h-100 border-0 shadow rounded-md">
@@ -173,6 +177,7 @@
                 class="card-title font-weight-bold"
                 style="font-size: 20px"
               ></router-link>
+              <p class="font-weight-bold">{{ product.title }}</p>
               <div class="discount mt-2" style="color: #999">
                 <s>Rp. {{ moneyFormat(product.price) }} </s>
                 <span
@@ -196,15 +201,18 @@
             <div
               style="display: inline-block; margin: 0 auto"
               class="card-body"
+              v-if="product.avg_rating != null"
             >
               <star-rating
                 :inline="true"
                 :star-size="20"
                 :read-only="true"
                 :show-rating="false"
-                :rating="5"
+                :rating="product.avg_rating"
               ></star-rating>
-              <span class="ml-2">(<b>7</b> ulasan)</span>
+              <span class="ml-2"
+                >(<b> {{ product.total_reviews }} </b> ulasan)</span
+              >
             </div>
           </div>
         </div>
@@ -251,8 +259,17 @@ export default {
       return store.getters["product/getProductsHome"];
     });
     const productsTerlaris = computed(() => {
-      return store.getters["product/getProductsTerlaris"];
+      return store.getters["product/getProductsTerlaris"].terlaris;
     });
+
+    // // mencari rata rata nilai rating
+    // let data = [80, 77, 88, 95, 68];
+    // var total = 0;
+    // for (var i = 0; i < data.length; i++) {
+    //   total += data[i];
+    // }
+    // var avg = total / data.length;
+    // console.log(avg);
 
     return {
       store,

@@ -172,8 +172,18 @@
                   role="tab"
                   aria-controls="ulasan"
                   aria-selected="false"
-                  ><i class="fa fa-comments"></i> Ulasan Produk (2 ulasan)</a
                 >
+                  <star-rating
+                    :show-rating="true"
+                    :star-size="23"
+                    :read-only="true"
+                    :increment="0.01"
+                    :rating="reviewsAvg"
+                  ></star-rating>
+                  <span
+                    >( <b>{{ countReviews }}</b> ulasan)</span
+                  >
+                </a>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -190,49 +200,59 @@
                 id="ulasan"
                 role="tabpanel"
                 aria-labelledby="ulasan-tab"
+                v-if="reviews !== null"
+              >
+                <div class="ulasan mt-5">
+                  <ul class="list-unstyled">
+                    <div
+                      class="card card-body mt-5"
+                      v-for="data in reviews"
+                      :key="data.id"
+                    >
+                      <li class="media">
+                        <img
+                          :src="`https://ui-avatars.com/api/?name=${data.customer.name}&background=1f1235&color=ffffff`"
+                          class="mr-3 rounded-circle"
+                          width="50"
+                          alt="profile"
+                        />
+                        <div class="media-body">
+                          <star-rating
+                            :show-rating="false"
+                            :star-size="21"
+                            :read-only="true"
+                            :increment="0.01"
+                            :rating="data.rating"
+                          ></star-rating>
+                          <h5 class="mt-0 mb-1">{{ data.customer.name }}</h5>
+                          <p>{{ data.review }}</p>
+                        </div>
+                      </li>
+                    </div>
+                    <!-- jika tidak ada ulasan -->
+                    <div class="mt-5" v-if="reviews == 0">
+                      <li class="media">
+                        <div class="media-body">
+                          <div class="alert alert-info">Belum ada ulasan</div>
+                        </div>
+                      </li>
+                    </div>
+                  </ul>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="ulasan"
+                role="tabpanel"
+                aria-labelledby="ulasan-tab"
+                v-if="reviews == null"
               >
                 <div class="ulasan mt-5">
                   <ul class="list-unstyled">
                     <div class="card card-body mt-5">
                       <li class="media">
-                        <img
-                          src="/logo.png"
-                          class="mr-3"
-                          width="50"
-                          alt="profile"
-                        />
                         <div class="media-body">
-                          <star-rating
-                            v-bind:show-rating="false"
-                            v-bind:star-size="25"
-                            v-bind:read-only="true"
-                            v-bind:rating="5"
-                          ></star-rating>
-                          <h5 class="mt-0 mb-1">John Doe</h5>
-                          <p>Barang oke pengiriman cepat</p>
-                        </div>
-                      </li>
-                    </div>
-                    <div class="card card-body mt-5">
-                      <li class="media">
-                        <img
-                          src="/logo.png"
-                          class="mr-3"
-                          width="50"
-                          alt="profile"
-                        />
-                        <div class="media-body">
-                          <star-rating
-                            v-bind:show-rating="false"
-                            v-bind:star-size="25"
-                            v-bind:read-only="true"
-                            v-bind:rating="2.5"
-                          >
-                          </star-rating>
-                          <h5 class="mt-0 mb-1">Lim Dan</h5>
-                          <p>
-                            pengiriman cepat dan produk original. Terima Kasih
-                          </p>
+                          <div class="alert alert-info">Belum ada ulasan</div>
                         </div>
                       </li>
                     </div>
@@ -276,6 +296,18 @@ export default {
       return store.getters["product/getGalleries"];
     });
 
+    /* reviews customer */
+    const reviews = computed(() => {
+      return store.getters["product/getReviews"].reviews;
+    });
+    const countReviews = computed(() => {
+      return store.getters["product/getReviews"].reviews_count;
+    });
+    const reviewsAvg = computed(() => {
+      return store.getters["product/getReviews"].reviews_avg_rating;
+    });
+
+    /* tambah produk ke keranjang */
     function addToCart(product_id, price, weight) {
       // check token terlebih dahulu
       const token = store.state.auth.token;
@@ -296,8 +328,13 @@ export default {
       product,
       addToCart,
       gallery,
+      reviews,
+      countReviews,
+      reviewsAvg,
     };
   },
+
+  // photo galleries thumbnail
   data: () => ({
     photoActive: 0,
   }),
