@@ -118,7 +118,8 @@
       <div class="row">
         <div class="col-md-12">
           <h4 class="font-weight-bold">
-            <i class="fa fa-shopping-bag mr-2"></i>Product Terbaru
+            <i class="fa fa-shopping-bag mr-2"></i>Nikmati belanja dengan mudah
+            dan nyaman
           </h4>
           <hr
             style="
@@ -208,6 +209,7 @@
                 :star-size="20"
                 :read-only="true"
                 :show-rating="false"
+                :increment="0.01"
                 :rating="product.avg_rating"
               ></star-rating>
               <span class="ml-2"

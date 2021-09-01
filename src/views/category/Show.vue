@@ -63,9 +63,12 @@
               :star-size="20"
               :read-only="true"
               :show-rating="false"
-              :rating="5"
+              :increment="0.01"
+              :rating="product.avg_rating"
             ></star-rating>
-            <span class="ml-2">(<b>{{ product.review.length }}</b> ulasan)</span>
+            <span class="ml-2"
+              >(<b>{{ product.total_reviews }}</b> ulasan)</span
+            >
           </div>
         </div>
       </div>
@@ -87,8 +90,8 @@ import { useRoute } from "vue-router";
 import StarRating from "vue-star-rating";
 
 export default {
-  components:{
-    StarRating
+  components: {
+    StarRating,
   },
   setup() {
     const store = useStore();

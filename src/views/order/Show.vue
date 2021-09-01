@@ -260,6 +260,7 @@
                               <star-rating
                                 :star-size="50"
                                 :show-rating="false"
+                                :increment="0.5"
                                 v-model:rating="stateReview.rating"
                               >
                               </star-rating>
@@ -539,7 +540,7 @@ export default {
     // fungsi untuk mengecek length review
     const cekOrderId = () => {
       let orderId = stateReview.order_id;
-
+      // kirim ke server untuk di cek
       ApiServer.post("/reviewcek", {
         order_id: orderId,
         user_id: user.id,
@@ -547,6 +548,7 @@ export default {
         .then((response) => {
           stateReview.status = response.data.review;
           console.log(stateReview.status);
+          // cek jika array belum ada isi nya
           if (stateReview.status.length == 0) {
             alert("silahkan isi ulasan anda");
           }
@@ -562,7 +564,6 @@ export default {
       let productId = stateReview.product_id;
       let rating = stateReview.rating;
       let review = stateReview.reviewCustomer;
-      console.log(stateReview.status);
       // cek apakah data ada ?
       if (stateReview.status.length <= 0) {
         ApiServer.post("/review", {
@@ -571,24 +572,23 @@ export default {
           product_id: productId,
           rating: rating,
           review: review,
-        });
-
-        // hapus data di form
-        stateReview.rating = "";
-        stateReview.reviewCustomer = "";
-
-        // cek lagi isi reviewnya
-        ApiServer.post("/reviewcek", {
-          order_id: orderId,
-          user_id: user.id,
-        })
-          .then((response) => {
-            stateReview.status = response.data.review;
-            console.log(stateReview.status);
+        }).then(() => {
+          // hapus data di form
+          stateReview.rating = "";
+          stateReview.reviewCustomer = "";
+          // cek lagi isi reviewnya
+          ApiServer.post("/reviewcek", {
+            order_id: orderId,
+            user_id: user.id,
           })
-          .catch((error) => {
-            console.log(error);
-          });
+            .then((response) => {
+              stateReview.status = response.data.review;
+              console.log(stateReview.status);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
       } else {
         alert("anda sudah memberikan ulasan");
         // hapus data di form
